@@ -1,0 +1,11 @@
+{
+	"parent": "minecraft:block/orientable",
+	"textures": {
+		"up": "raidableclaims:block/facing-arrow-texture",
+		"down": "raidableclaims:block/claim_tower",
+		"north": "raidableclaims:block/claim_tower",
+		"south": "raidableclaims:block/claim_tower",
+		"east": "raidableclaims:block/claim_tower",
+		"west": "raidableclaims:block/claim_tower"
+	}
+}
