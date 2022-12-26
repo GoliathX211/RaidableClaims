@@ -1,8 +1,6 @@
 package goliath.raidableclaims.blocks.entity.custom;
 
 import goliath.raidableclaims.RCRegistry;
-import goliath.raidableclaims.RaidableClaims;
-import goliath.raidableclaims.blocks.ClaimTowerBlock;
 import goliath.raidableclaims.client.gui.menu.ClaimTowerMenu;
 import goliath.raidableclaims.player.PlayerReference;
 import net.minecraft.core.BlockPos;
@@ -21,15 +19,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.event.world.NoteBlockEvent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
@@ -44,10 +39,6 @@ public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
         super(RCRegistry.BlockEntityRegistry.CLAIM_TOWER_BLOCK_ENTITY.get(), pos, state);
     }
 
-    public void setPlayerReference(PlayerReference playerReference) {
-        this.playerReference = playerReference;
-    }
-
     @Override
     public Component getDisplayName() {
         return new TextComponent("Claim Tower");
@@ -59,7 +50,7 @@ public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
         return new ClaimTowerMenu(containerID, inventory, this);
     }
 
-    @NonNull
+    @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
@@ -81,7 +72,7 @@ public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
+    protected void saveAdditional(@Nonnull CompoundTag tag) {
         tag.put("playerReference", playerReference.save());
         tag.put("inventory", itemHandler.serializeNBT());
         super.saveAdditional(tag);

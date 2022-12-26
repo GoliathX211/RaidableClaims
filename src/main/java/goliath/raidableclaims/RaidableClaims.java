@@ -4,7 +4,6 @@ import com.mojang.logging.LogUtils;
 import goliath.raidableclaims.client.gui.screen.ClaimTowerScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;

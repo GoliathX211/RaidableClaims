@@ -4,11 +4,12 @@ import com.google.common.base.Supplier;
 import goliath.raidableclaims.blocks.ClaimTowerBlock;
 import goliath.raidableclaims.blocks.entity.custom.ClaimTowerBlockEntity;
 import goliath.raidableclaims.client.gui.menu.ClaimTowerMenu;
-import goliath.raidableclaims.client.gui.screen.ClaimTowerScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -19,14 +20,11 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.network.IContainerFactory;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegistryObject;
-
-import java.util.function.Function;
 
 public class RCRegistry {
     @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -60,7 +58,7 @@ public class RCRegistry {
 
             @Override
             public ItemStack makeIcon() {
-                return new ItemStack(Items.BELL);
+                return new ItemStack(BlockRegistry.CLAIM_TOWER.get());
             }
             public static final ModCreativeTab RAIDABLE_CLAIMS_TAB = new ModCreativeTab(CreativeModeTab.TABS.length, "raidableclaims_creative_tab");
         }

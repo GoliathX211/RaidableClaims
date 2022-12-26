@@ -1,16 +1,13 @@
 package goliath.raidableclaims.player;
 
-import com.google.gson.JsonObject;
 import com.mojang.authlib.GameProfile;
 import goliath.raidableclaims.RaidableClaims;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.server.ServerLifecycleHooks;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 

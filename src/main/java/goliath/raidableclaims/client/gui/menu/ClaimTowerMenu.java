@@ -3,7 +3,6 @@ package goliath.raidableclaims.client.gui.menu;
 import goliath.raidableclaims.RCRegistry;
 import goliath.raidableclaims.blocks.entity.custom.ClaimTowerBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
