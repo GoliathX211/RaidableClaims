@@ -4,6 +4,7 @@ import goliath.raidableclaims.RCRegistry;
 import goliath.raidableclaims.RaidableClaims;
 import goliath.raidableclaims.blocks.entity.custom.ClaimTowerBlockEntity;
 import goliath.raidableclaims.client.gui.menu.ClaimTowerMenu;
+import goliath.raidableclaims.player.PlayerReference;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,6 +15,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.EnchantmentMenu;
 import net.minecraft.world.item.ItemStack;
@@ -33,16 +35,16 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.system.CallbackI;
 
 public class ClaimTowerBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     public BlockEntity blockEntity;
-    public String owner_UUID;
+    public PlayerReference playerReference;
     // TODO Owner is not persistent.
     public ClaimTowerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
-        this.owner_UUID = "";
     }
 
     // Block Methods
@@ -50,7 +52,11 @@ public class ClaimTowerBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         if (entity == null) return;
-        this.owner_UUID = entity.getStringUUID();
+        this.playerReference = new PlayerReference(entity.getUUID(), PlayerReference.getPlayerName(entity.getUUID()));
+        if (this.blockEntity instanceof ClaimTowerBlockEntity) {
+            ((ClaimTowerBlockEntity) this.blockEntity).playerReference = this.playerReference;
+            this.blockEntity.setChanged();
+        }
 
     }
     @Override
@@ -61,13 +67,17 @@ public class ClaimTowerBlock extends BaseEntityBlock {
             RaidableClaims.LOGGER.info("Claim Tower was right clicked on Server");
         }
 
-        if (!player.getStringUUID().equals(this.owner_UUID)) {
+        if (this.playerReference == null) {
+            RaidableClaims.LOGGER.error("No player reference, avoided NPE.");
+            return InteractionResult.FAIL;
+        }
+        if (!player.getStringUUID().equals(this.playerReference.PLAYER_UUID.toString())) {
             RaidableClaims.LOGGER.info("Player is not the owner of this claim tower");
             return InteractionResult.FAIL;
         }
         Minecraft minecraft = Minecraft.getInstance();
         if (!level.isClientSide()) {
-            minecraft.gui.getChat().addMessage(new TextComponent("Owner of Claim Tower Block at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ": " + this.owner_UUID));
+            minecraft.gui.getChat().addMessage(new TextComponent("Owner of Claim Tower Block at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ": " + this.playerReference.username + " UUID: " + this.playerReference.PLAYER_UUID));
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof ClaimTowerBlockEntity) {
                 NetworkHooks.openGui(((ServerPlayer) player), this.getMenuProvider(state, level, pos), pos);
@@ -113,6 +123,7 @@ public class ClaimTowerBlock extends BaseEntityBlock {
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         blockEntity = new ClaimTowerBlockEntity(pos, state);
+        ((ClaimTowerBlockEntity)blockEntity).playerReference = this.playerReference;
         return blockEntity;
     }
 
