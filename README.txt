@@ -1,4 +1,4 @@
-
+PAY NO ATTENTION TO THIS, NOT SPENDING TIME TO EDIT THIS AT THE MOMENT
 Source installation information for modders
 -------------------------------------------
 This code follows the Minecraft Forge installation methodology. It will apply
