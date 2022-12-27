@@ -2,6 +2,7 @@ package goliath.raidableclaims;
 
 import com.mojang.logging.LogUtils;
 import goliath.raidableclaims.client.gui.screen.ClaimTowerScreen;
+import goliath.raidableclaims.network.RaidableClaimsPacketHandler;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,9 +32,9 @@ public class RaidableClaims {
         // Register the setup method for modloading
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
         RCRegistry.registerAll(eventBus);
-
         eventBus.addListener(this::onClientSetup);
-        //eventBus.addListener(this::setup);
+        eventBus.addListener(this::setup);
+
         // Register the enqueueIMC method for modloading
         //eventBus.addListener(this::enqueueIMC);
         // Register the processIMC method for modloading
@@ -42,10 +43,12 @@ public class RaidableClaims {
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
-    private void onClientSetup(final FMLCommonSetupEvent event) {
+    private void onClientSetup(final FMLCommonSetupEvent event) {  // TODO Fix common
         event.enqueueWork(() -> MenuScreens.register(RCRegistry.MenuRegistry.CLAIM_TOWER_MENU.get(), ClaimTowerScreen::new));
     }
-    private void setup(final FMLCommonSetupEvent event) {}
+    private void setup(final FMLCommonSetupEvent event) {
+        RaidableClaimsPacketHandler.init();
+    }
 
     private void enqueueIMC(final InterModEnqueueEvent event)
     {

@@ -5,7 +5,6 @@ import goliath.raidableclaims.RaidableClaims;
 import goliath.raidableclaims.blocks.entity.custom.ClaimTowerBlockEntity;
 import goliath.raidableclaims.client.gui.menu.ClaimTowerMenu;
 import goliath.raidableclaims.player.PlayerReference;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TextComponent;
@@ -33,10 +32,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public class ClaimTowerBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-    public BlockEntity blockEntity;
-    public PlayerReference playerReference;
     public ClaimTowerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
@@ -47,49 +46,33 @@ public class ClaimTowerBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity entity, ItemStack itemStack) {
         if (entity == null) return;
-        this.playerReference = new PlayerReference(entity.getUUID(), PlayerReference.getPlayerName(entity.getUUID()));
-        if (this.blockEntity instanceof ClaimTowerBlockEntity) {
-            ((ClaimTowerBlockEntity) this.blockEntity).playerReference = this.playerReference;
-            this.blockEntity.setChanged();
+        BlockEntity blockEntity = level.getBlockEntity(pos);
+        if (blockEntity instanceof ClaimTowerBlockEntity claimTowerBlockEntity) {
+            claimTowerBlockEntity.playerReference = PlayerReference.of(entity);
         }
-
     }
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
-        if (level.isClientSide()) {
-            RaidableClaims.LOGGER.info("Claim Tower was right clicked on Client");
-        } else {
-            RaidableClaims.LOGGER.info("Claim Tower was right clicked on Server");
-        }
-
-        if (this.playerReference == null) {
-            RaidableClaims.LOGGER.error("No player reference, avoided NPE.");
-            return InteractionResult.FAIL;
-        }
-        if (!player.getStringUUID().equals(this.playerReference.PLAYER_UUID.toString())) {
-            RaidableClaims.LOGGER.info("Player is not the owner of this claim tower");
-            return InteractionResult.FAIL;
-        }
-        Minecraft minecraft = Minecraft.getInstance();
-        if (!level.isClientSide()) {
-            minecraft.gui.getChat().addMessage(new TextComponent("Owner of Claim Tower Block at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ": " + this.playerReference.username + " UUID: " + this.playerReference.PLAYER_UUID));
-            BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof ClaimTowerBlockEntity) {
-                NetworkHooks.openGui(((ServerPlayer) player), this.getMenuProvider(state, level, pos), pos);
-            } else {
-                throw new IllegalStateException("Container provider is missing");
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ClaimTowerBlockEntity blockEntity) {
+            // Debug message sent to player
+            player.sendMessage(new TextComponent("Owner of Claim Tower Block at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ": " + blockEntity.playerReference.username + " UUID: " + blockEntity.playerReference.PLAYER_UUID), new UUID(0,0));
+            if (!player.getStringUUID().equals(blockEntity.playerReference.PLAYER_UUID.toString())) {
+                player.sendMessage(new TextComponent("You are not the owner of this block!"), new UUID(0, 0));
+                return InteractionResult.FAIL;
             }
+            NetworkHooks.openGui(((ServerPlayer) player), this.getMenuProvider(state, level, pos), pos);
+        } else {
+            RaidableClaims.LOGGER.error("Container provider is missing");
+            return InteractionResult.FAIL;
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
     @Nullable
     @Override
-    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos)
-    {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof ClaimTowerBlockEntity) {
-            return new SimpleMenuProvider((containerID, inventory, player) -> new ClaimTowerMenu(containerID, inventory, blockEntity), new TextComponent("Claim Tower"));
-}       else {
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
+        if (level.getBlockEntity(pos) instanceof ClaimTowerBlockEntity blockEntity) {
+            return new SimpleMenuProvider((containerID, inventory, player) -> new ClaimTowerMenu(containerID, inventory, blockEntity), new TextComponent("Claim Tower: " + blockEntity.playerReference.username));
+        } else {
             return null;
         }
     }
@@ -117,9 +100,7 @@ public class ClaimTowerBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        blockEntity = new ClaimTowerBlockEntity(pos, state);
-        ((ClaimTowerBlockEntity)blockEntity).playerReference = this.playerReference;
-        return blockEntity;
+        return new ClaimTowerBlockEntity(pos, state);
     }
 
     @Nullable

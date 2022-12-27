@@ -12,7 +12,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.SlotItemHandler;
 
 public class ClaimTowerMenu extends AbstractContainerMenu {
     private final ClaimTowerBlockEntity blockEntity;
@@ -25,15 +24,12 @@ public class ClaimTowerMenu extends AbstractContainerMenu {
         super(RCRegistry.MenuRegistry.CLAIM_TOWER_MENU.get(), containerID);
         this.blockEntity = (ClaimTowerBlockEntity) entity;
         this.level = inventory.player.level;
-        checkContainerSize(inventory, 3);
+        checkContainerSize(inventory, 0);
 
         addPlayerInventory(inventory);
         addPlayerHotbar(inventory);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 34, 40));
-            this.addSlot(new SlotItemHandler(handler, 1, 57, 18));
-            this.addSlot(new SlotItemHandler(handler, 2, 103, 18));
         }); // capabilities = null
     }
 
@@ -45,7 +41,7 @@ public class ClaimTowerMenu extends AbstractContainerMenu {
     private static final int VANILLA_FIRST_SLOT_INDEX = 0;
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
-    private static final int TE_INVENTORY_SLOT_COUNT = 3;
+    private static final int TE_INVENTORY_SLOT_COUNT = 0;
 
 
 
@@ -99,4 +95,5 @@ public class ClaimTowerMenu extends AbstractContainerMenu {
             this.addSlot(new Slot(inventory, i, 8 + i * 18, 144));
         }
     }
+
 }

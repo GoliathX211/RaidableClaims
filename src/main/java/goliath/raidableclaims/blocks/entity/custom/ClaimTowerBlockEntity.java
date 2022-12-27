@@ -3,6 +3,7 @@ package goliath.raidableclaims.blocks.entity.custom;
 import goliath.raidableclaims.RCRegistry;
 import goliath.raidableclaims.client.gui.menu.ClaimTowerMenu;
 import goliath.raidableclaims.player.PlayerReference;
+import goliath.raidableclaims.utils.BlockEntityUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -15,6 +16,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -27,16 +29,25 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
+    private final ItemStackHandler itemHandler = new ItemStackHandler(0) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
         }
     };
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+    private LazyOptional<IItemHandler> lazyItemHandler;
     public PlayerReference playerReference;
     public ClaimTowerBlockEntity(BlockPos pos, BlockState state) {
         super(RCRegistry.BlockEntityRegistry.CLAIM_TOWER_BLOCK_ENTITY.get(), pos, state);
+        lazyItemHandler = LazyOptional.of(() -> itemHandler);
+    }
+
+    @Override
+    public void setChanged() {
+        super.setChanged();
+        if (this.level != null && !this.level.isClientSide()) {
+            BlockEntityUtil.sendUpdatePacket(this);
+        }
     }
 
     @Override
@@ -61,8 +72,15 @@ public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
 
     @Override
     public void onLoad() {
-        super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
+        if (this.level != null && this.level.isClientSide()) {
+            BlockEntityUtil.requestUpdatePacket(this);
+        }
+    }
+
+    @Nonnull
+    @Override
+    public CompoundTag getUpdateTag() {
+        return this.saveWithoutMetadata();
     }
 
     @Override
