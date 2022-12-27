@@ -20,6 +20,7 @@ public class ClaimTowerMenu extends AbstractContainerMenu {
     public ClaimTowerMenu(int containerID, Inventory inventory, FriendlyByteBuf extraData) {
         this(containerID, inventory, inventory.player.level.getBlockEntity(extraData.readBlockPos()));
     }
+
     public ClaimTowerMenu(int containerID, Inventory inventory, BlockEntity entity) {
         super(RCRegistry.MenuRegistry.CLAIM_TOWER_MENU.get(), containerID);
         this.blockEntity = (ClaimTowerBlockEntity) entity;
@@ -42,7 +43,6 @@ public class ClaimTowerMenu extends AbstractContainerMenu {
     private static final int TE_INVENTORY_FIRST_SLOT_INDEX = VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT;
 
     private static final int TE_INVENTORY_SLOT_COUNT = 0;
-
 
 
     @Override
@@ -83,6 +83,7 @@ public class ClaimTowerMenu extends AbstractContainerMenu {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
                 player, RCRegistry.BlockRegistry.CLAIM_TOWER.get());
     }
+
     private void addPlayerInventory(Inventory inventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
@@ -90,6 +91,7 @@ public class ClaimTowerMenu extends AbstractContainerMenu {
             }
         }
     }
+
     private void addPlayerHotbar(Inventory inventory) {
         for (int i = 0; i < 9; ++i) {
             this.addSlot(new Slot(inventory, i, 8 + i * 18, 144));

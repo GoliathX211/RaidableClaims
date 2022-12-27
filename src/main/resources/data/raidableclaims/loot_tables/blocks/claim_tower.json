@@ -1,14 +1,14 @@
 {
-	"type": "minecraft:block",
-	"pools": [
-		{
-			"rolls": 1.0,
-			"entries": [
-				{
-					"type": "minecraft:item",
-					"name": "raidableclaims:claim_tower"
-				}
-			]
-		}
-	]
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "rolls": 1.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "raidableclaims:claim_tower"
+        }
+      ]
+    }
+  ]
 }

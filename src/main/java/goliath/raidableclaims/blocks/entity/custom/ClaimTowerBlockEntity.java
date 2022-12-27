@@ -16,7 +16,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -35,8 +34,9 @@ public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
             setChanged();
         }
     };
-    private LazyOptional<IItemHandler> lazyItemHandler;
+    private final LazyOptional<IItemHandler> lazyItemHandler;
     public PlayerReference playerReference;
+
     public ClaimTowerBlockEntity(BlockPos pos, BlockState state) {
         super(RCRegistry.BlockEntityRegistry.CLAIM_TOWER_BLOCK_ENTITY.get(), pos, state);
         lazyItemHandler = LazyOptional.of(() -> itemHandler);
@@ -111,6 +111,7 @@ public class ClaimTowerBlockEntity extends BlockEntity implements MenuProvider {
         }
         Containers.dropContents(this.level, this.worldPosition, inventory);
     } // TODO Remove. This block won't handle items.
+
     public static <T extends BlockEntity> void tick(Level level, BlockPos pos, BlockState state, T blockEntity) {
     }
 }

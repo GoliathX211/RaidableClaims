@@ -13,7 +13,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class ClaimTowerScreen extends AbstractContainerScreen<ClaimTowerMenu> {
-    public static final ResourceLocation GUI_TEXTURE =  new ResourceLocation(RaidableClaims.MODID, "textures/gui/claim-tower-screen.png");
+    public static final ResourceLocation GUI_TEXTURE = new ResourceLocation(RaidableClaims.MODID, "textures/gui/claim-tower-screen.png");
     protected final ClaimTowerMenu menu;
 
     public ClaimTowerScreen(ClaimTowerMenu menu, Inventory inventory, Component title) {
@@ -36,11 +36,12 @@ public class ClaimTowerScreen extends AbstractContainerScreen<ClaimTowerMenu> {
     @Override
     protected void init() {
         super.init();
-        Button newButton = new Button((width-imageWidth)/2 + 40, (height-imageHeight)/2 + 40, 100, 20, new TextComponent("Show Claim Area"), onPress -> {
+        Button newButton = new Button((width - imageWidth) / 2 + 40, (height - imageHeight) / 2 + 40, 100, 20, new TextComponent("Show Claim Area"), onPress -> {
             RaidableClaims.LOGGER.info("Button Pressed");
         });
         this.addRenderableWidget(newButton);
     }
+
     @Override
     public void render(PoseStack poseStack, int mouseX, int mouseY, float delta) {
         renderBackground(poseStack);
@@ -50,5 +51,7 @@ public class ClaimTowerScreen extends AbstractContainerScreen<ClaimTowerMenu> {
     }
 
     @Override
-    public boolean isPauseScreen() { return false; }
+    public boolean isPauseScreen() {
+        return false;
+    }
 }

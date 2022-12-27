@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 public class MessageRequestNBT {
     private final BlockPos pos;
+
     public MessageRequestNBT(BlockEntity tileEntity) {
         this.pos = tileEntity.getBlockPos();
     }
@@ -33,11 +34,9 @@ public class MessageRequestNBT {
         {
             //RaidableClaims.LOGGER.info("NBT Update Request received.");
             ServerPlayer player = supplier.get().getSender();
-            if(player != null)
-            {
+            if (player != null) {
                 BlockEntity blockEntity = player.level.getBlockEntity(message.pos);
-                if(blockEntity != null)
-                {
+                if (blockEntity != null) {
                     BlockEntityUtil.sendUpdatePacket(blockEntity);
                 }
             }

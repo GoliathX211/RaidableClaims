@@ -33,13 +33,15 @@ public class RaidableClaimsPacketHandler {
         register(MessageRequestNBT.class, MessageRequestNBT::encode, MessageRequestNBT::decode, MessageRequestNBT::handle);
 
     }
-    private static <T> void register(Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf,T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> handler) {
+
+    private static <T> void register(Class<T> clazz, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> handler) {
         instance.registerMessage(nextId++, clazz, encoder, decoder, handler);
     }
 
     public static PacketDistributor.PacketTarget getTarget(Player player) {
-        if(player instanceof ServerPlayer)
-            return getTarget((ServerPlayer)player);
+        if (player instanceof ServerPlayer) {
+            return getTarget((ServerPlayer) player);
+        }
         return null;
     }
 

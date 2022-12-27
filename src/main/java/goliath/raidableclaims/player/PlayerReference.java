@@ -8,7 +8,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.raid.Raid;
 import net.minecraftforge.common.UsernameCache;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
@@ -24,9 +23,11 @@ public class PlayerReference {
         this.PLAYER_UUID = playerUUID;
         this.username = username;
     }
+
     public MutableComponent getNameComponent(boolean isClient) {
         return new TextComponent(this.getUsername(isClient));
     }
+
     public String getUsername(boolean isClient) {
         if (isClient) {
             return this.username;
@@ -38,61 +39,63 @@ public class PlayerReference {
             return playerName;
         }
     }
+
     public static String getPlayerName(UUID playerID) {
         try {
             String name = UsernameCache.getLastKnownUsername(playerID);
-            if(name != null) return name;
+            if (name != null) return name;
             MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-            if(server != null)
-            {
+            if (server != null) {
                 GameProfile profile = server.getProfileCache().get(playerID).orElse(null);
-                if(profile != null) return profile.getName();
+                if (profile != null) return profile.getName();
             }
-        } catch(Throwable t) {
+        } catch (Throwable t) {
             RaidableClaims.LOGGER.error("Error getting player name.", t);
         }
         return null;
     }
+
     public CompoundTag save() {
-        RaidableClaims.LOGGER.info("save() method called in PlayerReference.java");
         CompoundTag compound = new CompoundTag();
         compound.putUUID("id", this.PLAYER_UUID);
         compound.putString("name", this.getUsername(false));
-        RaidableClaims.LOGGER.info("Returning " + this.PLAYER_UUID + " & " + this.getUsername(false) + " as a CompoundTag.");
         return compound;
     }
+
     public static PlayerReference load(CompoundTag compound) {
         try {
-            RaidableClaims.LOGGER.info("Static load method called in PlayerReference.java");
             UUID id = compound.getUUID("id");
             String name = compound.getString("name");
-            RaidableClaims.LOGGER.info("Returning PlayerReference with " + id + " & " + name);
             return of(id, name);
-        } catch(Exception e) {
+        } catch (Exception e) {
             RaidableClaims.LOGGER.error("Error loading PlayerReference from tag.", e);
             return null;
         }
     }
 
     public static PlayerReference of(UUID playerID, String name) {
-        if(playerID == null) throw new RuntimeException("Cannot make a PlayerReference from a null player ID!");
+        if (playerID == null) throw new RuntimeException("Cannot make a PlayerReference from a null player ID!");
         return new PlayerReference(playerID, name);
     }
+
     public static PlayerReference of(GameProfile playerProfile) {
-        if(playerProfile == null)
+        if (playerProfile == null) {
             return null;
+        }
         return of(playerProfile.getId(), playerProfile.getName());
     }
 
     public static PlayerReference of(Entity entity) {
-        if(entity instanceof Player)
-            return of((Player)entity);
+        if (entity instanceof Player) {
+            return of((Player) entity);
+        }
         return null;
     }
 
     public static PlayerReference of(Player player) {
-        if(player == null)
+        if (player == null) {
             return null;
+        }
         return of(player.getGameProfile());
     }
 }

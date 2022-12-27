@@ -44,13 +44,16 @@ public class RCRegistry {
                 registry.register(blockItem);
             });
         }
+
         public static RegistryObject<Block> CLAIM_TOWER = BLOCKS.register("claim_tower", () ->
                 new ClaimTowerBlock(BlockBehaviour.Properties.of(Material.HEAVY_METAL, MaterialColor.COLOR_RED)
                         .explosionResistance(100.0f)
                 ));
     }
+
     public static class ItemRegistry {
         public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, RaidableClaims.MODID);
+
         public static class ModCreativeTab extends CreativeModeTab {
             private ModCreativeTab(int index, String label) {
                 super(index, label);
@@ -60,6 +63,7 @@ public class RCRegistry {
             public ItemStack makeIcon() {
                 return new ItemStack(BlockRegistry.CLAIM_TOWER.get());
             }
+
             public static final ModCreativeTab RAIDABLE_CLAIMS_TAB = new ModCreativeTab(CreativeModeTab.TABS.length, "raidableclaims_creative_tab");
         }
 
@@ -67,6 +71,7 @@ public class RCRegistry {
             return ITEMS.register(name, item);
         }
     }
+
     public static class BlockEntityRegistry {
         public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, RaidableClaims.MODID);
 
@@ -77,6 +82,7 @@ public class RCRegistry {
                                 BlockRegistry.CLAIM_TOWER.get()).build(null)
                 );
     }
+
     public static class MenuRegistry {
         public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(ForgeRegistries.CONTAINERS, RaidableClaims.MODID);
         public static final RegistryObject<MenuType<ClaimTowerMenu>> CLAIM_TOWER_MENU = registerMenuType(ClaimTowerMenu::new, "claim_tower_menu");
@@ -85,6 +91,7 @@ public class RCRegistry {
             return MENUS.register(name, () -> IForgeMenuType.create(factory));
         }
     }
+
     public static void registerAll(IEventBus eventBus) {
         BlockRegistry.BLOCKS.register(eventBus);
         ItemRegistry.ITEMS.register(eventBus);

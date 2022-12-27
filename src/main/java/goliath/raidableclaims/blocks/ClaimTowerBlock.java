@@ -36,6 +36,7 @@ import java.util.UUID;
 
 public class ClaimTowerBlock extends BaseEntityBlock {
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+
     public ClaimTowerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
@@ -51,11 +52,12 @@ public class ClaimTowerBlock extends BaseEntityBlock {
             claimTowerBlockEntity.playerReference = PlayerReference.of(entity);
         }
     }
+
     @Override
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult result) {
         if (!level.isClientSide() && level.getBlockEntity(pos) instanceof ClaimTowerBlockEntity blockEntity) {
             // Debug message sent to player
-            player.sendMessage(new TextComponent("Owner of Claim Tower Block at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ": " + blockEntity.playerReference.username + " UUID: " + blockEntity.playerReference.PLAYER_UUID), new UUID(0,0));
+            player.sendMessage(new TextComponent("Owner of Claim Tower Block at " + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ": " + blockEntity.playerReference.username + " UUID: " + blockEntity.playerReference.PLAYER_UUID), new UUID(0, 0));
             if (!player.getStringUUID().equals(blockEntity.playerReference.PLAYER_UUID.toString())) {
                 player.sendMessage(new TextComponent("You are not the owner of this block!"), new UUID(0, 0));
                 return InteractionResult.FAIL;
@@ -67,6 +69,7 @@ public class ClaimTowerBlock extends BaseEntityBlock {
         }
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
+
     @Nullable
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
@@ -76,10 +79,12 @@ public class ClaimTowerBlock extends BaseEntityBlock {
             return null;
         }
     }
+
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
+
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState().setValue(FACING, context.getHorizontalDirection());

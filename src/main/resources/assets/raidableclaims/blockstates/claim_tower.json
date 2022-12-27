@@ -1,19 +1,19 @@
 {
-	"variants": {
-		"facing=east": {
-			"model": "raidableclaims:block/claim_tower",
-			"y": 90
-		},
-		"facing=north": {
-			"model": "raidableclaims:block/claim_tower"
-		},
-		"facing=south": {
-			"model": "raidableclaims:block/claim_tower",
-			"y": 180
-		},
-		"facing=west": {
-			"model": "raidableclaims:block/claim_tower",
-			"y": 270
-		}
-	}
+  "variants": {
+    "facing=east": {
+      "model": "raidableclaims:block/claim_tower",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "raidableclaims:block/claim_tower"
+    },
+    "facing=south": {
+      "model": "raidableclaims:block/claim_tower",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "raidableclaims:block/claim_tower",
+      "y": 270
+    }
+  }
 }

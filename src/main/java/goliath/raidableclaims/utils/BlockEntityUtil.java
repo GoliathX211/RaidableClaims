@@ -14,22 +14,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.List;
 
-public class BlockEntityUtil
-{
+public class BlockEntityUtil {
     /**
      * Sends an update packet to clients tracking a tile entity.
      *
      * @param blockEntity the tile entity to update
      */
-    public static void sendUpdatePacket(BlockEntity blockEntity)
-    {
+    public static void sendUpdatePacket(BlockEntity blockEntity) {
         ClientboundBlockEntityDataPacket packet = ClientboundBlockEntityDataPacket.create(blockEntity);
-        if(packet != null)
-        {
+        if (packet != null) {
             sendUpdatePacket(blockEntity.getLevel(), blockEntity.getBlockPos(), packet);
-        }
-        else
-        {
+        } else {
             RaidableClaims.LOGGER.error(blockEntity.getClass().getName() + ".getUpdatePacket() returned null!");
         }
     }
@@ -39,23 +34,17 @@ public class BlockEntityUtil
      *
      * @param blockEntity the tile entity to update
      */
-    public static void sendUpdatePacket(BlockEntity blockEntity, CompoundTag compound)
-    {
+    public static void sendUpdatePacket(BlockEntity blockEntity, CompoundTag compound) {
         ClientboundBlockEntityDataPacket packet = ClientboundBlockEntityDataPacket.create(blockEntity, be -> compound);
         sendUpdatePacket(blockEntity.getLevel(), blockEntity.getBlockPos(), packet);
     }
 
-    private static void sendUpdatePacket(Level world, BlockPos pos, ClientboundBlockEntityDataPacket packet)
-    {
-        if(world instanceof ServerLevel)
-        {
-            //CurrencyMod.LOGGER.info("Sending Tile Entity Update Packet to the connected clients.");
-            ServerLevel server = (ServerLevel) world;
+    private static void sendUpdatePacket(Level world, BlockPos pos, ClientboundBlockEntityDataPacket packet) {
+        if (world instanceof ServerLevel server) {
+            //RaidableClaims.LOGGER.info("Sending Tile Entity Update Packet to the connected clients.");
             List<ServerPlayer> players = server.getChunkSource().chunkMap.getPlayers(new ChunkPos(pos), false);
             players.forEach(player -> player.connection.send(packet));
-        }
-        else
-        {
+        } else {
             RaidableClaims.LOGGER.error("Cannot send Tile Entity Update Packet from a client.");
         }
     }
@@ -64,10 +53,10 @@ public class BlockEntityUtil
         requestUpdatePacket(be.getLevel(), be.getBlockPos());
     }
 
-    public static void requestUpdatePacket(Level level, BlockPos pos)
-    {
-        if(level.isClientSide)
+    public static void requestUpdatePacket(Level level, BlockPos pos) {
+        if (level.isClientSide) {
             RaidableClaimsPacketHandler.instance.sendToServer(new MessageRequestNBT(pos));
+        }
     }
 
 }
