@@ -1,0 +1,12 @@
+Raidable Claims:
+
+Premise: Create a chunk claiming system in which enemy players can "raid" such that land claiming can work smoothly in a PvP environment.
+
+How will a raid work? (ideas):
+1.) Enemy players must stand in an area near a Claim Block which takes down "durability" on the claim. Claims would be repairable through some means.
+2.) After a Claim Block's "durability" reaches 0, it should become inactive such that players can preform actions in the claimed area.
+
+Additions:
+Claims should be chainable, if you claim a Claim Block, x, with another Claim Block, y, x should not be raidable until y has been raided.
+This is to mimic castle walls in a way such that enemies have to break into multiple lines of defense.
+Possible integration with FTB Teams in the future.
